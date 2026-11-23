@@ -1,0 +1,6 @@
+/* estilos globales de GARABATOZ (el diseño con grafitis lo meteremos en la fase 8) */
+body {
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+}

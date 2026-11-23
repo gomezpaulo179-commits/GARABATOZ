@@ -1,0 +1,12 @@
+<div class="container py-5 text-center">
+    <h1 class="titulo">GARABATOZ</h1>
+    <p class="text-secondary">portal en construccion...</p>
+
+    @if (ctrl.cargando()) {
+        <div class="spinner-border text-light" role="status"></div>
+    } @else if (ctrl.conectado()) {
+        <div class="alert alert-success d-inline-block">✅ {{ ctrl.mensaje() }}</div>
+    } @else {
+        <div class="alert alert-danger d-inline-block">❌ {{ ctrl.mensaje() }}</div>
+    }
+</div>
