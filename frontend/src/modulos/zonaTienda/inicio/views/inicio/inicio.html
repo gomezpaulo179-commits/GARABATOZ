@@ -1,6 +1,17 @@
 <div class="container py-5 text-center">
-    <h1 class="titulo">GARABATOZ</h1>
-    <p class="text-secondary">portal en construccion...</p>
+
+    <!-- titulo en grafiti: cada letra va en su propio <span> para poder girarla por separado.
+         aria-label hace que un lector de pantalla lea "GARABATOZ" entero y no letra a letra -->
+    <h1 class="titulo-grafiti" aria-label="GARABATOZ">
+        @for (l of letrasTitulo; track $index) {
+            <span class="letra" aria-hidden="true"
+                  [attr.data-letra]="l.letra"
+                  [style.--giro.deg]="l.giro"
+                  [style.--subida.em]="l.subida">{{ l.letra }}</span>
+        }
+    </h1>
+
+    <p class="text-secondary mt-4">portal en construccion...</p>
 
     @if (ctrl.cargando()) {
         <div class="spinner-border text-light" role="status"></div>

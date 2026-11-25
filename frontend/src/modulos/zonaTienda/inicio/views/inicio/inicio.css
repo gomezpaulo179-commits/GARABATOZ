@@ -1,5 +1,54 @@
-.titulo {
-    font-size: 4rem;
-    font-weight: 900;
-    letter-spacing: 0.3rem;
+/* ---------- TITULO GARABATOZ EN ESTILO GRAFITI ---------- */
+.titulo-grafiti {
+    font-family: 'Sedgwick Ave Display', cursive;   /* fuente de grafiti (paquete @fontsource, cargada en angular.json) */
+    font-size: clamp(3.5rem, 13vw, 9rem);           /* tamaño que se adapta: minimo 3.5rem, maximo 9rem */
+    font-weight: 400;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    letter-spacing: 0.06em;         /* un poco mas de aire: las letras gordas se tocarian */
+}
+
+/* Cada letra se pinta en DOS capas, como un grafiti de verdad:
+     capa de atras (::before) -> borde negro gordo + sombra 3D
+     capa de delante (.letra) -> la letra blanca, engordada con un borde blanco */
+.letra {
+    position: relative;             /* para colocar la capa de atras justo debajo */
+    display: inline-block;          /* necesario para poder girar cada letra con transform */
+    color: #fff;                    /* relleno blanco */
+
+    /* ENGORDAR: un borde BLANCO alrededor del relleno blanco hace la letra mas gruesa.
+       paint-order: el borde se pinta por debajo del relleno */
+    -webkit-text-stroke: 0.03em #fff;
+    paint-order: stroke fill;
+
+    /* giro y subida de cada letra: los valores llegan desde inicio.ts como variables CSS */
+    transform: rotate(var(--giro, 0deg)) translateY(var(--subida, 0em));
+}
+
+/* capa de atras: la misma letra (la saca del atributo data-letra) pero con un borde
+   negro MAS gordo que el blanco, asi asoma alrededor como contorno */
+.letra::before {
+    content: attr(data-letra);
+    position: absolute;
+    inset: 0;
+    z-index: -1;                    /* detras de la letra blanca */
+    color: #000;
+    -webkit-text-stroke: 0.1em #000;
+    paint-order: stroke fill;
+
+    /* sombra 3D: muchas sombras gris oscuro, cada una 1px mas abajo y a la derecha,
+       apiladas parecen un bloque. Sobre ese gris se ve el borde negro */
+    text-shadow:
+        1px 1px 0 #3a3a3a,
+        2px 2px 0 #3a3a3a,
+        3px 3px 0 #3a3a3a,
+        4px 4px 0 #3a3a3a,
+        5px 5px 0 #3a3a3a,
+        6px 6px 0 #3a3a3a,
+        7px 7px 0 #3a3a3a,
+        8px 8px 0 #3a3a3a,
+        9px 9px 0 #3a3a3a,
+        10px 10px 0 #3a3a3a;
 }
