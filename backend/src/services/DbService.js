@@ -15,7 +15,7 @@ export default class DbService {
     async conectar() {
         await this.#cliente.connect();
         this.#db = this.#cliente.db(this.nombreDb);
-        console.log(`✅ conectado a MongoDB Atlas, base de datos: ${this.nombreDb}`);
+        console.log(`conectado a MongoDB Atlas, base de datos: ${this.nombreDb}`);
     }
 
     async desconectar() {

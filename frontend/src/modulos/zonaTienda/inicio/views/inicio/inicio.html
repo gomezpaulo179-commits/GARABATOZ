@@ -16,8 +16,8 @@
     @if (ctrl.cargando()) {
         <div class="spinner-border text-light" role="status"></div>
     } @else if (ctrl.conectado()) {
-        <div class="alert alert-success d-inline-block">✅ {{ ctrl.mensaje() }}</div>
+        <div class="alert alert-success d-inline-block">{{ ctrl.mensaje() }}</div>
     } @else {
-        <div class="alert alert-danger d-inline-block">❌ {{ ctrl.mensaje() }}</div>
+        <div class="alert alert-danger d-inline-block">{{ ctrl.mensaje() }}</div>
     }
 </div>
