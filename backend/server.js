@@ -5,6 +5,8 @@ import config from './src/config/config.js';
 import DbService from './src/services/DbService.js';
 import EstadoController from './src/controllers/EstadoController.js';
 import estadoRoutes from './src/routes/estadoRoutes.js';
+import AuthController from './src/controllers/AuthController.js';
+import authRoutes from './src/routes/authRoutes.js';
 
 const app = express();
 
@@ -15,15 +17,17 @@ app.use(express.json());                          // para poder leer el body en 
 //---------------- servicios y controladores ----------------
 const dbService = new DbService(config.mongo.uri, config.mongo.nombreDb);
 const estadoController = new EstadoController(dbService);
+const authController = new AuthController(dbService);
 
 //---------------- rutas ----------------
 app.use('/api/estado', estadoRoutes(estadoController));
+app.use('/api/auth', authRoutes(authController));
 
 //---------------- arranque: primero mongo, luego el servidor ----------------
 try {
     await dbService.conectar();
-    app.listen(config.puerto, () => console.log(`🚀 servidor GARABATOZ en http://localhost:${config.puerto}`));
+    app.listen(config.puerto, () => console.log(`servidor GARABATOZ en http://localhost:${config.puerto}`));
 } catch (error) {
-    console.error('❌ no se pudo conectar a MongoDB Atlas:', error.message);
+    console.error('no se pudo conectar a MongoDB Atlas:', error.message);
     process.exit(1);
 }

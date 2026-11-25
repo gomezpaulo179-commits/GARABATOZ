@@ -1,17 +1,17 @@
-# 📒 SEGUIMIENTO DEL PROYECTO GARABATOZ
+# SEGUIMIENTO DEL PROYECTO GARABATOZ
 
 Diario del proyecto: qué se ha hecho, por qué y cómo funciona cada cosa.
 Se actualiza al terminar cada fase.
 
 ---
 
-## 📌 Índice
+## Índice
 
 1. [Qué es GARABATOZ](#1-qué-es-garabatoz)
 2. [Decisiones tomadas](#2-decisiones-tomadas)
 3. [Reglas del profesor (NO saltarse)](#3-reglas-del-profesor-no-saltarse)
 4. [Plan por fases](#4-plan-por-fases)
-5. [FASE 1 – Esqueleto del proyecto ✅](#5-fase-1--esqueleto-del-proyecto-)
+5. [FASE 1 – Esqueleto del proyecto (hecha)](#5-fase-1--esqueleto-del-proyecto-hecha)
 6. [Cómo arrancar el proyecto](#6-cómo-arrancar-el-proyecto)
 7. [Glosario rápido](#7-glosario-rápido)
 8. [Cambios pequeños](#8-cambios-pequeños)
@@ -91,18 +91,18 @@ Sacadas de la corrección de mi examen de la 1ª evaluación:
 
 | Fase | Qué | Estado |
 |---|---|---|
-| 1 | Esqueleto: Angular + Bootstrap, servidor Express, conexión con Atlas | ✅ Hecha |
-| 2 | Registro e inicio de sesión con JWT + middleware `verificarAccessToken` | 🔨 En curso (paso a paso, ver apartado 8) |
-| 3 | Tienda: productos y secciones | ⬜ |
-| 4 | Carrito | ⬜ |
-| 5 | Mi cuenta: direcciones de envío con GeoAPI (vía Node) | ⬜ |
-| 6 | Pedido y pago con Stripe (modo prueba) | ⬜ |
-| 7 | Login con Google, Cloudinary y Nodemailer | ⬜ |
-| 8 | Diseño negro con grafitis (CSS propio) | ⬜ |
+| 1 | Esqueleto: Angular + Bootstrap, servidor Express, conexión con Atlas | Hecha |
+| 2 | Registro e inicio de sesión con JWT + middleware `verificarAccessToken` | En curso (paso a paso, ver apartado 8) |
+| 3 | Tienda: productos y secciones | Pendiente |
+| 4 | Carrito | Pendiente |
+| 5 | Mi cuenta: direcciones de envío con GeoAPI (vía Node) | Pendiente |
+| 6 | Pedido y pago con Stripe (modo prueba) | Pendiente |
+| 7 | Login con Google, Cloudinary y Nodemailer | Pendiente |
+| 8 | Diseño negro con grafitis (CSS propio) | Pendiente |
 
 ---
 
-## 5. FASE 1 – Esqueleto del proyecto ✅
+## 5. FASE 1 – Esqueleto del proyecto (hecha)
 
 **Objetivo:** tener el frontend y el backend creados, conectados entre sí y con la base de datos,
 y comprobarlo con una página que diga "todo funciona".
@@ -181,7 +181,7 @@ MONGODB_DB=garabatoz              nombre de la base de datos
 - `.env` → el real, con mi contraseña. **Nunca se sube a GitHub** (está en `.gitignore`).
 - `.env.example` → la plantilla sin datos reales, para que otra persona sepa qué tiene que rellenar.
 
-> 💡 Analogía: el `.env` es la caja fuerte. Solo Node tiene la llave. Angular jamás la ve,
+> **Analogía:** el `.env` es la caja fuerte. Solo Node tiene la llave. Angular jamás la ve,
 > porque todo lo que está en Angular lo puede leer cualquiera abriendo el navegador (F12).
 
 #### `src/config/config.js`
@@ -269,7 +269,7 @@ y su test, que fallaría al cambiar la página).
 #### `proxy.conf.json`
 Cuando Angular pide algo a `/api/...`, el proxy lo reenvía a `http://localhost:3000/api/...` (nuestro Node).
 
-> 💡 Analogía: es como un buzón en la puerta. Angular deja la carta en "/api" y el proxy
+> **Analogía:** es como un buzón en la puerta. Angular deja la carta en "/api" y el proxy
 > se la lleva al Node. Así en el código nunca escribo `http://localhost:3000`, y si un día
 > subo el servidor a internet solo cambio el proxy, no todo el código.
 
@@ -293,7 +293,7 @@ inicio.html / inicio.ts   <---->  InicioController.ts  <---->  EstadoService.ts 
       (VISTA)                         (CONTROLADOR)                (SERVICIO)
 ```
 
-> 💡 Analogía del restaurante:
+> **Analogía del restaurante:**
 > - **Vista** = la mesa. Solo enseña lo que le traen.
 > - **Controlador** = el camarero. Sabe qué hay que enseñar y decide qué pedir, pero no cocina.
 > - **Servicio** = el único que entra en la cocina (Node).
@@ -322,8 +322,8 @@ inicio.html / inicio.ts   <---->  InicioController.ts  <---->  EstadoService.ts 
 
 ```html
 @if (ctrl.cargando()) {        spinner girando
-} @else if (ctrl.conectado()) { mensaje verde ✅
-} @else {                       mensaje rojo ❌
+} @else if (ctrl.conectado()) { mensaje verde
+} @else {                       mensaje rojo
 }
 ```
 
@@ -337,7 +337,7 @@ Los signals se leen con paréntesis: `ctrl.mensaje()`.
 4. El proxy lo manda a Node (puerto 3000).
 5. Node: ruta → `EstadoController` → `DbService.ping()` → Atlas responde.
 6. Node devuelve `{ ok: true, ... }`.
-7. El controlador actualiza los signals → la vista se repinta → **mensaje verde** ✅.
+7. El controlador actualiza los signals → la vista se repinta → **mensaje verde**.
 
 ### 5.4 Configuración de MongoDB Atlas (hecha a mano)
 
@@ -349,12 +349,12 @@ Los signals se leen con paréntesis: `ctrl.mensaje()`.
 5. Connect → Controladores (Drivers) → Node.js → copiar la cadena `mongodb+srv://...` al `.env`,
    cambiando `<db_password>` por la contraseña.
 
-> ⚠️ En la contraseña de la base de datos mejor solo letras y números:
+> **Aviso:** en la contraseña de la base de datos mejor solo letras y números:
 > símbolos como `@ # / :` rompen la cadena de conexión.
 
 ### 5.5 Resultado de la fase 1
-✅ Backend conectado a Atlas (`✅ conectado a MongoDB Atlas, base de datos: garabatoz`).
-✅ Frontend en http://localhost:4200 mostrando el mensaje verde.
+- Backend conectado a Atlas (`conectado a MongoDB Atlas, base de datos: garabatoz`).
+- Frontend en http://localhost:4200 mostrando el mensaje verde.
 
 ---
 
@@ -434,7 +434,7 @@ relleno blanco, borde negro, sombra 3D gris y cada letra un poco girada y a dist
    ```
    El CSS las usa en `transform: rotate(var(--giro)) translateY(var(--subida))`.
 
-   > 💡 Analogía: es como un rótulo hecho con letras sueltas pegadas a mano en una pared:
+   > **Analogía:** es como un rótulo hecho con letras sueltas pegadas a mano en una pared:
    > cada una queda un poco torcida y a su altura, y eso le da el toque callejero.
 
    Está en la **vista** y no en el controlador porque es algo puramente visual, no lógica de la página.
@@ -484,7 +484,7 @@ capa de atrás    (.letra::before)  → la misma letra en negro + borde NEGRO de
 - `z-index: -1` la manda detrás de la letra blanca.
 - Se subió un poco el `letter-spacing` (0.06em) para que las letras gordas no se toquen.
 
-> 💡 Analogía: es como recortar cada letra dos veces, una en cartulina negra un poco más grande
+> **Analogía:** es como recortar cada letra dos veces, una en cartulina negra un poco más grande
 > y otra en blanca, y pegar la blanca encima. El borde negro que sobra es el contorno.
 
 **Ajuste fino:** para hacerlas más o menos gordas basta con cambiar los dos números de `-webkit-text-stroke`
@@ -494,9 +494,9 @@ en `inicio.css` (el blanco de `.letra` y el negro de `.letra::before`). El negro
 
 La fase 2 (registro e inicio de sesión) se hace en pasos pequeños:
 
-1. **Modelo del cliente** ← este
-2. Endpoint de registro (guardar en Mongo) y probarlo con Thunder Client
-3. Cifrar la contraseña con bcrypt
+1. Modelo del cliente (hecho)
+2. Endpoint de registro (guardar en Mongo) y probarlo con Thunder Client (hecho)
+3. Cifrar la contraseña con bcrypt (hecho)
 4. Endpoint de login que devuelve el token JWT
 5. Middleware `verificarAccessToken` y una ruta protegida
 6. Angular: modelo y `ClienteService`
@@ -509,7 +509,7 @@ La fase 2 (registro e inicio de sesión) se hace en pasos pequeños:
 **Por qué hace falta:** con el driver nativo, MongoDB no obliga a ninguna estructura: podrías guardar un cliente
 con `nombre` y otro con `name`, y nadie te avisaría. Si todos se crean con `Cliente.crear(...)`, todos tienen los mismos campos.
 
-> 💡 Analogía: es la ficha de socio de un gimnasio. Antes de apuntar a nadie decides qué casillas tiene la ficha,
+> **Analogía:** es la ficha de socio de un gimnasio. Antes de apuntar a nadie decides qué casillas tiene la ficha,
 > y luego todas las fichas se rellenan con el mismo formato.
 
 **Forma de un cliente** (igual que `Cliente` + `Cuenta` en PcComponentes):
@@ -551,4 +551,154 @@ cliente
 Cliente.crear({ nombre: ' Paulo ', apellidos: 'Gomez', email: 'Paulo@Gmail.com ', password: 'xxx', aceptaNovedades: true })
 → { nombre: 'Paulo', apellidos: 'Gomez', cuenta: { email: 'paulo@gmail.com', ..., aceptaNovedades: true }, direcciones: [], ... }
 ```
+
+### 8.4 FASE 2 · Paso 2 – Endpoint de registro (25/11/2026)
+
+**Qué:** `POST /api/auth/registro` recibe los datos del formulario y guarda el cliente en la colección `clientes` de Atlas.
+
+**Archivos:**
+
+| Archivo | Cambio |
+|---|---|
+| `backend/src/controllers/AuthController.js` | NUEVO. Método `registro()` y `_validarRegistro()` |
+| `backend/src/routes/authRoutes.js` | NUEVO. `router.post('/registro', ...)` |
+| `backend/server.js` | 3 líneas: importar, crear `authController`, montar `/api/auth` |
+
+**Recorrido de una petición:**
+```
+POST /api/auth/registro  { nombre, apellidos, email, password, telefono, aceptaPrivacidad, aceptaNovedades }
+   │
+server.js → express.json() convierte el body en req.body
+   │
+authRoutes.js → "/registro" va a authController.registro()
+   │
+AuthController.registro():
+   1. VALIDAR       ¿faltan campos? ¿email raro? ¿password < 8? ¿no acepta privacidad?  → 400
+   2. CONSTRUIR     Cliente.crear(...)  (email en minúsculas)
+   3. COMPROBAR     dbService.findOne('clientes', { 'cuenta.email': ... })  ¿ya existe? → 409
+   4. GUARDAR       dbService.insertOne('clientes', cliente)
+   5. RESPONDER     201 { ok, mensaje, idCliente }   (nunca se devuelve la password)
+```
+
+**Códigos de respuesta HTTP** (el número le dice al frontend qué ha pasado sin leer el texto):
+
+| Código | Significa | Cuándo |
+|---|---|---|
+| 201 Created | Creado | La cuenta se ha guardado |
+| 400 Bad Request | Datos mal enviados | Falta algo, email raro, password corta, no acepta privacidad |
+| 409 Conflict | Choca con algo que ya existe | El email ya está registrado |
+| 500 Internal Server Error | Fallo del servidor | Mongo caído, error de código... |
+
+**Lo importante:**
+
+- **Validar en el servidor aunque el formulario también valide.** Cualquiera puede saltarse el formulario
+  y mandar la petición a mano (como hacemos con Thunder Client). El servidor es la última puerta.
+  > **Analogía:** el formulario es el cartel de "prohibido entrar con comida"; el servidor es el segurata de la puerta.
+- **La validación va en un método aparte** `_validarRegistro()` que devuelve el texto del error o `null`.
+  El `_` delante es un convenio para decir "esto es de uso interno de la clase".
+- `nombre?.trim()` → el `?.` (encadenamiento opcional) evita que pete si `nombre` no viene: da `undefined` en vez de error.
+- **Expresión regular del email** `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` → "algo sin espacios ni @, una @, algo, un punto, algo".
+  Es una comprobación básica: no garantiza que el correo exista, solo que tiene forma de correo.
+- `aceptaPrivacidad !== true` → tiene que ser exactamente `true`. Se valida pero **no se guarda**:
+  si no la acepta, no hay cuenta.
+- `req.body ?? {}` → si llega una petición sin datos, `req.body` es `undefined`; con `?? {}` se usa un objeto vacío
+  y la validación responde 400 en vez de romperse con un 500.
+- **El duplicado se comprueba con el email ya normalizado** (`cliente.cuenta.email`, en minúsculas),
+  por eso primero se construye el cliente y luego se busca.
+
+**Aviso: en este paso la contraseña se guardaba tal cual** (sin cifrar). Se arregló en el paso 3 con bcrypt (ver 8.6).
+Por eso para probar se usa una contraseña inventada, y el cliente de prueba se borra después.
+
+**Pruebas hechas** (con una base de datos falsa en memoria):
+
+| Prueba | Resultado |
+|---|---|
+| Datos correctos, email `Paulo@Gmail.com` | 201, guardado como `paulo@gmail.com` |
+| Mismo email en minúsculas | 409 Ya existe una cuenta con ese email |
+| Password `123` | 400 La contraseña debe tener al menos 8 caracteres |
+| `aceptaPrivacidad: false` | 400 Debes aceptar la politica de privacidad |
+| Email `nomail` | 400 El email no tiene un formato valido |
+
+**Cómo probarlo con Thunder Client** (extensión de VS Code):
+1. New Request → método **POST** → URL `http://localhost:3000/api/auth/registro`
+2. Pestaña **Body → JSON**:
+   ```json
+   {
+     "nombre": "Prueba",
+     "apellidos": "Garabatoz",
+     "email": "prueba@garabatoz.com",
+     "password": "contrasena123",
+     "telefono": "600000000",
+     "aceptaPrivacidad": true,
+     "aceptaNovedades": false
+   }
+   ```
+3. **Send** → debe responder `201`. Si lo mandas otra vez → `409`.
+4. En Atlas: **Browse Collections → garabatoz → clientes** → ahí está el documento.
+
+### 8.5 Quitar emojis del código y de la documentación (25/11/2026)
+
+**Qué:** se quitan los emojis del código y de `SEGUIMIENTO.md` y `DECISIONES.md`. A partir de ahora no se usan en ningún archivo del proyecto.
+
+En la documentación se cambian por texto: en `DECISIONES.md` las marcas de quién tomó cada decisión pasan a ser **[Paulo]**, **[Propuesta]** y **[Técnica]**; en `SEGUIMIENTO.md` las analogías se marcan con **Analogía:**, los avisos con **Aviso:** y el estado de las fases con texto (Hecha, En curso, Pendiente).
+
+| Archivo | Antes | Ahora |
+|---|---|---|
+| `backend/server.js` | emoji de cohete y de cruz delante de los mensajes | sin emoji |
+| `backend/src/services/DbService.js` | emoji de check delante del mensaje | sin emoji |
+| `frontend/.../inicio.html` | emojis de check y cruz delante del mensaje de estado | sin emoji (el color verde/rojo de la alerta ya lo indica) |
+
+### 8.6 FASE 2 · Paso 3 – Cifrar la contraseña con bcrypt (25/11/2026)
+
+**Qué:** al registrarse, la contraseña se guarda en Mongo **cifrada** (como un *hash*), nunca la real.
+
+**Archivos:**
+
+| Archivo | Cambio |
+|---|---|
+| `backend/package.json` | Nueva dependencia `bcryptjs` |
+| `backend/src/controllers/AuthController.js` | `import bcrypt from 'bcryptjs'` y una línea nueva en `registro()` |
+
+**Después de este cambio** hay que hacer `npm install` en `backend` (hay un paquete nuevo).
+
+**El código nuevo:**
+```js
+const passwordCifrada = await bcrypt.hash(password, 10);
+const cliente = Cliente.crear({ ..., password: passwordCifrada, ... });
+```
+
+**Qué es un hash:** una "huella" de la contraseña.
+- De la contraseña se saca siempre la misma huella... pero **de la huella no se puede sacar la contraseña**.
+- En el login (paso 4) no se "descifra" nada: se calcula la huella de lo que escribe el usuario
+  y se compara con la guardada usando `bcrypt.compare(passwordEscrita, hashGuardado)`.
+
+> **Analogía:** una trituradora de papel con truco. Con el confeti no puedes recomponer el folio,
+> pero si te dan otro folio puedes triturarlo y ver si sale exactamente el mismo confeti.
+
+**Por qué importa:** si alguien entra en la base de datos (o se filtra), no ve las contraseñas.
+Y como mucha gente repite contraseña, tampoco podría usarlas en otras webs.
+
+**Cómo es un hash de bcrypt** (60 caracteres):
+```
+$2b$10$NhC4KuNP9A.LL1LcLeocW.04LOkU7nxjcU5H2tcdM2nrgqG0igQ.q
+ │   │  └───────────┬──────────┘└──────────────┬────────────┘
+ │   │       sal (22 caracteres)        la huella en sí
+ │   └── coste 10
+ └── versión del algoritmo
+```
+
+- **Sal (salt):** un trozo aleatorio que bcrypt mezcla con la contraseña. Por eso dos usuarios con la misma
+  contraseña tienen hashes distintos, y no sirven las "tablas" de hashes ya calculados que usan los atacantes.
+  La sal va guardada dentro del propio hash, por eso `compare` sabe usarla.
+- **Coste 10:** cuántas vueltas da el cifrado (2^10 = 1024). Cuanto más alto, más lento para un atacante
+  que pruebe millones de contraseñas. 10 es el valor habitual: unas décimas de segundo por registro.
+- `await` → cifrar tarda un poco, así que `bcrypt.hash` devuelve una promesa y esperamos a que termine.
+
+**Prueba hecha** (base de datos falsa en memoria):
+- Registro con password `12345678` → guardado `$2b$10$NhC4...` (60 caracteres).
+- `bcrypt.compare('12345678', hash)` → `true`; `bcrypt.compare('otra1234', hash)` → `false`.
+- Los demás casos del paso 2 (409, 400...) siguen funcionando igual.
+
+**Cómo comprobarlo tú:** borra el cliente de prueba anterior en Atlas, vuelve a registrarlo con Thunder Client
+y mira el campo `cuenta.password` en Atlas: debe empezar por `$2b$10$`.
 
