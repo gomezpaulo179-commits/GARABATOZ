@@ -14,6 +14,7 @@ Se actualiza al terminar cada fase.
 5. [FASE 1 – Esqueleto del proyecto ✅](#5-fase-1--esqueleto-del-proyecto-)
 6. [Cómo arrancar el proyecto](#6-cómo-arrancar-el-proyecto)
 7. [Glosario rápido](#7-glosario-rápido)
+8. [Cambios pequeños](#8-cambios-pequeños)
 
 ---
 
@@ -91,7 +92,7 @@ Sacadas de la corrección de mi examen de la 1ª evaluación:
 | Fase | Qué | Estado |
 |---|---|---|
 | 1 | Esqueleto: Angular + Bootstrap, servidor Express, conexión con Atlas | ✅ Hecha |
-| 2 | Registro e inicio de sesión con JWT + middleware `verificarAccessToken` | ⏳ Pendiente de confirmar |
+| 2 | Registro e inicio de sesión con JWT + middleware `verificarAccessToken` | 🔨 En curso (paso a paso, ver apartado 8) |
 | 3 | Tienda: productos y secciones | ⬜ |
 | 4 | Carrito | ⬜ |
 | 5 | Mi cuenta: direcciones de envío con GeoAPI (vía Node) | ⬜ |
@@ -392,3 +393,162 @@ Abrir http://localhost:4200
 | **CORS** | Regla de seguridad del navegador: Node tiene que decir qué webs le pueden llamar |
 | **`.env`** | Archivo con secretos, solo en el servidor, nunca en git |
 | **Inyección de dependencias** | Darle a una clase lo que necesita desde fuera en vez de que lo cree ella |
+
+---
+
+## 8. Cambios pequeños
+
+A partir de aquí vamos paso a paso, con cambios pequeños, para entender cada parte.
+
+### 8.1 Título GARABATOZ en estilo grafiti (25/11/2026)
+
+**Qué:** el título de la página de inicio pasa de texto normal a letras de grafiti:
+relleno blanco, borde negro, sombra 3D gris y cada letra un poco girada y a distinta altura.
+
+**Archivos tocados:**
+
+| Archivo | Cambio |
+|---|---|
+| `frontend/package.json` | Nueva dependencia `@fontsource/sedgwick-ave-display` (la fuente) |
+| `frontend/angular.json` | Se carga el CSS de la fuente en `styles` (entre Bootstrap y nuestro `styles.css`) |
+| `inicio.ts` | Array `letrasTitulo`: cada letra con su `giro` (grados) y `subida` (em) |
+| `inicio.html` | El `<h1>` pinta cada letra en su propio `<span>` con un `@for` |
+| `inicio.css` | Estilos `.titulo-grafiti` y `.letra` |
+
+**Cómo funciona:**
+
+1. **La fuente.** Es *Sedgwick Ave Display*, gratuita (Google Fonts). En vez de pedirla a Google cada vez
+   que se abre la web, está instalada como paquete npm (`@fontsource`) → viene dentro del proyecto,
+   funciona sin internet y el navegador no hace peticiones a webs externas.
+
+2. **Una letra = un `<span>`.** Para girar cada letra por separado tienen que ser elementos distintos.
+   En `inicio.ts` hay una lista:
+   ```ts
+   { letra: 'G', giro: -8, subida: 0.05 }
+   ```
+   y en el HTML un `@for` recorre la lista y crea un `<span>` por letra. A cada uno le pasa dos
+   **variables CSS** con su giro y su subida:
+   ```html
+   [style.--giro.deg]="l.giro"      →  style="--giro: -8deg"
+   [style.--subida.em]="l.subida"   →  style="--subida: 0.05em"
+   ```
+   El CSS las usa en `transform: rotate(var(--giro)) translateY(var(--subida))`.
+
+   > 💡 Analogía: es como un rótulo hecho con letras sueltas pegadas a mano en una pared:
+   > cada una queda un poco torcida y a su altura, y eso le da el toque callejero.
+
+   Está en la **vista** y no en el controlador porque es algo puramente visual, no lógica de la página.
+
+3. **Relleno blanco + borde negro.**
+   - `color: #fff` → relleno blanco.
+   - `-webkit-text-stroke: 0.07em #000` → borde negro alrededor de cada letra.
+   - `paint-order: stroke fill` → pinta primero el borde y luego el relleno encima.
+     Sin esto, el borde se "come" la mitad del blanco y las letras quedan finas.
+
+4. **Sombra 3D.** `text-shadow` con 8 sombras gris oscuro, cada una 1px más abajo y a la derecha.
+   Apiladas parecen un bloque. Es gris y no negra porque el fondo de la web es negro:
+   una sombra negra no se vería, y sobre el gris sí se distingue el borde negro.
+
+5. **Tamaño adaptable.** `font-size: clamp(3.5rem, 13vw, 9rem)` → crece con el ancho de la pantalla,
+   pero nunca baja de 3.5rem (móvil) ni pasa de 9rem (pantallas grandes).
+
+6. **Accesibilidad.** El `<h1>` lleva `aria-label="GARABATOZ"` y los `<span>` `aria-hidden="true"`:
+   un lector de pantalla lee la palabra entera en vez de "G, A, R, A...".
+
+**Después de este cambio** hay que hacer `npm install` en `frontend` (hay un paquete nuevo).
+
+### 8.2 Letras del título más gordas (25/11/2026)
+
+**Qué:** las letras del título se veían finas. Ahora son más gruesas y el contorno negro se ve mejor.
+
+**Archivos tocados:** `inicio.html` (atributo `data-letra` en cada `<span>`) e `inicio.css`.
+
+**Por qué se veían finas:** el borde negro (`-webkit-text-stroke`) se pinta a caballo del contorno de la letra:
+mitad hacia fuera y mitad hacia DENTRO, comiéndose el blanco. `paint-order: stroke fill` debería evitarlo,
+pero no todos los navegadores lo respetan en texto HTML, y en el mío las letras salían finas.
+
+**Solución: pintar cada letra en dos capas**, como un grafiti de verdad (primero el contorno, luego el relleno):
+
+```
+capa de delante  (.letra)          → letra blanca + borde BLANCO de 0.03em  → la engorda
+capa de atrás    (.letra::before)  → la misma letra en negro + borde NEGRO de 0.1em
+                                      + la sombra 3D gris
+```
+
+- Cada capa es de **un solo color** (blanco sobre blanco, negro sobre negro), así que da igual que el borde
+  se pinte por dentro o por fuera: no se come nada. Funciona igual en todos los navegadores.
+- Como el borde negro de atrás (0.1em) es más gordo que el blanco de delante (0.03em), asoma alrededor → contorno.
+- **`::before`** es un "pseudo-elemento": una caja extra que CSS crea dentro del `<span>` sin tocar el HTML.
+  Con `content: attr(data-letra)` escribe dentro la misma letra, que lee del atributo `data-letra`
+  que le pone el HTML (`[attr.data-letra]="l.letra"`).
+- `z-index: -1` la manda detrás de la letra blanca.
+- Se subió un poco el `letter-spacing` (0.06em) para que las letras gordas no se toquen.
+
+> 💡 Analogía: es como recortar cada letra dos veces, una en cartulina negra un poco más grande
+> y otra en blanca, y pegar la blanca encima. El borde negro que sobra es el contorno.
+
+**Ajuste fino:** para hacerlas más o menos gordas basta con cambiar los dos números de `-webkit-text-stroke`
+en `inicio.css` (el blanco de `.letra` y el negro de `.letra::before`). El negro tiene que ser siempre mayor que el blanco.
+
+### 8.3 FASE 2 · Paso 1 – Modelo del cliente (25/11/2026)
+
+La fase 2 (registro e inicio de sesión) se hace en pasos pequeños:
+
+1. **Modelo del cliente** ← este
+2. Endpoint de registro (guardar en Mongo) y probarlo con Thunder Client
+3. Cifrar la contraseña con bcrypt
+4. Endpoint de login que devuelve el token JWT
+5. Middleware `verificarAccessToken` y una ruta protegida
+6. Angular: modelo y `ClienteService`
+7. Vista del login/registro (solo HTML)
+8. Controlador que une vista y servicio
+9. Guardar el token y proteger páginas
+
+**Qué:** archivo nuevo `backend/src/models/Cliente.js`. Todavía no se usa en ningún sitio: es la "plantilla" que usará el registro en el paso 2.
+
+**Por qué hace falta:** con el driver nativo, MongoDB no obliga a ninguna estructura: podrías guardar un cliente
+con `nombre` y otro con `name`, y nadie te avisaría. Si todos se crean con `Cliente.crear(...)`, todos tienen los mismos campos.
+
+> 💡 Analogía: es la ficha de socio de un gimnasio. Antes de apuntar a nadie decides qué casillas tiene la ficha,
+> y luego todas las fichas se rellenan con el mismo formato.
+
+**Forma de un cliente** (igual que `Cliente` + `Cuenta` en PcComponentes):
+
+```
+cliente
+├── nombre, apellidos
+├── cuenta
+│   ├── email            en minúsculas
+│   ├── password         CIFRADA (se hará en el paso 3)
+│   ├── telefono
+│   ├── activada         true
+│   ├── fechaCreacion    milisegundos (Date.now())
+│   ├── imagenAvatar     '' de momento
+│   └── aceptaNovedades  casilla de descuentos
+├── direcciones []       fase de envíos
+├── pedidos []           fase de pedidos
+└── favoritos []
+```
+
+**Línea a línea, lo importante:**
+
+- `export default class Cliente` → una clase que se puede importar desde otros archivos.
+- `static crear(...)` → **static** = se llama sobre la clase, sin hacer `new`: `Cliente.crear({...})`.
+  No hace falta un objeto "cliente" para fabricar otro, igual que no hace falta una ficha para imprimir fichas en blanco.
+- `crear({ nombre, apellidos, ... })` → **desestructuración**: recibe UN objeto y saca sus propiedades en variables.
+  Así se llama con los datos del formulario tal cual: `Cliente.crear(req.body)`.
+- `telefono = ''`, `aceptaNovedades = false` → **valores por defecto** si no vienen (son opcionales).
+- `.trim()` → quita espacios al principio y al final (`" Paulo "` → `"Paulo"`).
+- `.toLowerCase()` en el email → `Paulo@Gmail.com` y `paulo@gmail.com` cuentan como el mismo email
+  Así, cuando en el paso 2 comprobemos si el email ya existe, la comprobación funciona aunque cambien las mayúsculas
+  (el `.toLowerCase()` solo no impide duplicados: lo que los impide es esa comprobación).
+- `fechaCreacion: Date.now()` → número de milisegundos desde 1970. Como en PcComponentes: un número se guarda
+  y se compara sin líos de zonas horarias ni conversiones de objetos `Date`.
+- Arrays vacíos `[]` → así existen desde el principio y en las siguientes fases solo hay que añadir cosas.
+
+**Prueba hecha:**
+```
+Cliente.crear({ nombre: ' Paulo ', apellidos: 'Gomez', email: 'Paulo@Gmail.com ', password: 'xxx', aceptaNovedades: true })
+→ { nombre: 'Paulo', apellidos: 'Gomez', cuenta: { email: 'paulo@gmail.com', ..., aceptaNovedades: true }, direcciones: [], ... }
+```
+

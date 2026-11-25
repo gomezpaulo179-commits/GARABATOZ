@@ -72,6 +72,18 @@ Cada decisión indica quién la tomó:
 - **Por qué:** igual que el `dbService` del profe. Si algún día cambio de base de datos,
   solo toco este archivo y no todos los controladores.
 
+### 2.3.1 Modelo `Cliente` como clase con método estático `crear()` ⚙️
+- **Por qué:** sin Mongoose no hay esquemas; esta clase garantiza que todos los clientes tienen los mismos campos.
+- **Misma forma que PcComponentes** (`cliente.cuenta.email`, `fechaCreacion` en milisegundos...) y que la consulta del profe
+  (`{ 'cuenta.email': ... }`).
+- **Email en minúsculas y sin espacios** 🙋 → así la comprobación de "este email ya existe" (paso 2) funciona aunque cambien las mayúsculas.
+  - Matiz: el estándar SMTP (RFC 5321) dice que la parte de antes de la @ *puede* distinguir mayúsculas,
+    pero desaconseja aprovecharlo y casi ningún proveedor lo hace (Gmail, Outlook... tratan `Smith` y `smith` igual).
+    Por eso normalizar a minúsculas es lo habitual.
+  - Descartado: guardar el email tal cual y comparar sin mayúsculas al buscar → más "correcto" pero más complicado en Mongo.
+- **Campos del registro:** nombre, apellidos, email, contraseña, teléfono (opcional) y casilla de novedades.
+  La casilla de privacidad es obligatoria pero no se guarda: sin marcarla no se puede registrar.
+
 ### 2.4 Configuración del cluster: Free (M0), AWS, París, sin datos de ejemplo 🤖
 - **Free:** 0 €, de sobra para un proyecto de clase (512 MB).
 - **París:** una de las regiones más cercanas a España → menos tiempo de respuesta.
@@ -192,7 +204,18 @@ Cada decisión indica quién la tomó:
 ### 5.4 El diseño va al final (fase 8) 🤖
 - **Por qué:** ver 1.5. Mientras tanto, solo fondo negro y diseño básico.
 
-### 5.5 Grafitis originales, no copiados 🤖
+### 5.5 Título en grafiti con la fuente Sedgwick Ave Display 🙋 + ⚙️
+- **Elegido por Paulo:** fuente *Sedgwick Ave Display*, relleno blanco, borde negro, sombra 3D y letras giradas.
+- **Fuente instalada con npm (`@fontsource`) en vez de cargarla desde Google Fonts** ⚙️: va dentro del proyecto,
+  funciona sin internet y el navegador no hace peticiones a webs externas (en la línea de la regla del profe).
+- **Sombra 3D gris oscuro y no negra** ⚙️: el fondo es negro, una sombra negra no se vería
+  y el borde negro tampoco. Sobre el gris se distinguen los dos.
+- **Letras en dos capas (`.letra` blanca + `::before` negra) en vez de un solo borde** ⚙️: el borde negro sobre la letra blanca
+  se comía el relleno en algunos navegadores y las letras salían finas. Con dos capas de un solo color cada una
+  se ve igual en todos y se pueden engordar.
+- **La imagen de referencia (abecedario de @Appi.Art) solo como inspiración** 🤖: es obra de otro artista, no se copian sus letras.
+
+### 5.6 Grafitis originales, no copiados 🤖
 - **Por qué:** usar arte de otros puede dar problemas de derechos. Haremos SVG propios o fotos mías.
 
 ---
